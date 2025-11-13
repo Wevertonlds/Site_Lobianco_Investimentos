@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lobianco Investimentos</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Importando o Supabase via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header>
@@ -13,6 +15,47 @@
     <main>
         <h2>Status da Conexão</h2>
         <p>API Backend: <span id="api-status">Verificando...</span></p>
+
+        <div id="auth-forms">
+            <!-- Formulário de Login -->
+            <div id="login-form">
+                <h2>Login</h2>
+                <form id="login">
+                    <input type="email" id="login-email" placeholder="Seu e-mail" required>
+                    <input type="password" id="login-password" placeholder="Sua senha" required>
+                    <button type="submit">Entrar</button>
+                </form>
+                <p>Não tem uma conta? <a href="#" id="show-signup">Cadastre-se</a></p>
+                <p><a href="#" id="show-forgot">Esqueceu a senha?</a></p>
+            </div>
+
+            <!-- Formulário de Cadastro -->
+            <div id="signup-form" class="hidden">
+                <h2>Cadastro</h2>
+                <form id="signup">
+                    <input type="email" id="signup-email" placeholder="Seu e-mail" required>
+                    <input type="password" id="signup-password" placeholder="Crie uma senha" required>
+                    <button type="submit">Cadastrar</button>
+                </form>
+                <p>Já tem uma conta? <a href="#" id="show-login">Faça o login</a></p>
+            </div>
+
+            <!-- Formulário de Esqueceu a Senha -->
+            <div id="forgot-password-form" class="hidden">
+                <h2>Recuperar Senha</h2>
+                <form id="forgot-password">
+                    <input type="email" id="forgot-email" placeholder="Seu e-mail" required>
+                    <button type="submit">Enviar link de recuperação</button>
+                </form>
+                <p><a href="#" id="back-to-login">Voltar para o login</a></p>
+            </div>
+        </div>
+
+        <div id="welcome-message" class="hidden">
+            <h2>Bem-vindo!</h2>
+            <p>Você está logado.</p>
+            <button id="logout">Sair</button>
+        </div>
     </main>
 
     <script src="script.js"></script>
