@@ -45,7 +45,7 @@ async function apiCall(endpoint, options = {}) {
 async function carregarConfig() {
   try {
     const config = await apiCall('/site-config');
-    aplicarConfiguracoes(config);
+    await aplicarConfiguracoes(config);
   } catch (error) {
     console.error('Erro ao carregar configuração:', error);
     aplicarConfigPadrao();
@@ -53,93 +53,183 @@ async function carregarConfig() {
 }
 
 function aplicarConfiguracoes(config) {
-  console.log('🎨 Aplicando configurações:', config);
-  
-  // Nome do site
-  if (document.getElementById('siteName')) {
-    document.getElementById('siteName').textContent = config.site_name || "Lobianco";
-  }
-  
-  // Logo
-  const siteLogo = document.getElementById('siteLogo');
-  if (siteLogo) {
-    if (config.logo_url) {
-      siteLogo.src = config.logo_url;
-      siteLogo.style.display = 'block';
-      siteLogo.style.width = config.logo_width || '60px';
-      siteLogo.style.height = config.logo_height || '60px';
-    } else {
-      siteLogo.style.display = 'none';
+  return new Promise((resolve) => {
+    console.log('🎨 Aplicando configurações:', config);
+    
+    // Nome do site
+    if (document.getElementById('siteName')) {
+      document.getElementById('siteName').textContent = config.site_name || "Lobianco";
     }
-  }
-  
-  // Telefone no footer
-  if (document.getElementById('footerPhone')) {
-    document.getElementById('footerPhone').textContent = 
-      `${config.phone || "(34) 99970-4808"} | ${config.company_address || "Uberlândia - MG"}`;
-  }
-  
-  // ========== APLICAR CORES DO SITE ==========
-  if (config.main_color) {
-    document.documentElement.style.setProperty('--azul', config.main_color);
-    // Aplicar cor nos elementos
-    document.querySelectorAll('.btn-primary').forEach(btn => {
-      btn.style.backgroundColor = config.main_color;
-      btn.style.borderColor = config.main_color;
-    });
-    document.querySelectorAll('.text-primary').forEach(el => {
-      el.style.color = config.main_color;
-    });
-    document.querySelectorAll('.tag').forEach(tag => {
-      tag.style.backgroundColor = config.main_color;
-    });
-  }
-  
-  if (config.secondary_color) {
-    document.documentElement.style.setProperty('--azul-secundario', config.secondary_color);
-  }
-  
-  if (config.text_color) {
-    document.documentElement.style.setProperty('--cor-texto', config.text_color);
-    document.body.style.color = config.text_color;
-  }
-  
-  // Redes sociais
-  const whatsappLink = document.querySelector('.social-bar .whatsapp');
-  const instagramLink = document.querySelector('.social-bar .instagram');
-  const facebookLink = document.querySelector('.social-bar .facebook');
-  
-  if (whatsappLink && config.whatsapp_link) whatsappLink.href = config.whatsapp_link;
-  if (instagramLink && config.instagram_link) instagramLink.href = config.instagram_link;
-  if (facebookLink && config.facebook_link) facebookLink.href = config.facebook_link;
-  
-  // Carousel
-  const carousel = document.getElementById('carouselImages');
-  if (carousel) {
-    carousel.innerHTML = '';
-    const banners = config.banner_images?.length ? config.banner_images : [BANNER_PADRAO];
-    banners.forEach((url, i) => {
-      carousel.innerHTML += `
-        <div class="carousel-item ${i === 0 ? 'active' : ''}">
-          <img src="${url}" class="d-block w-100" style="height:70vh;object-fit:cover;" onerror="this.src='${BANNER_PADRAO}'">
-          <div class="carousel-caption text-end pe-5">
-            <h1 class="display-3 fw-bold text-white">Viva o Alto Padrão</h1>
-            <p class="fs-1 text-white">Lançamentos em Uberlândia</p>
-            <span class="tag px-5 py-3 rounded-pill fw-bold fs-4">LANÇAMENTOS</span>
-          </div>
-        </div>`;
-    });
-  }
+    
+    // Logo
+    const siteLogo = document.getElementById('siteLogo');
+    if (siteLogo) {
+      if (config.logo_url) {
+        siteLogo.src = config.logo_url;
+        siteLogo.style.display = 'block';
+        siteLogo.style.width = config.logo_width || '60px';
+        siteLogo.style.height = config.logo_height || '60px';
+      } else {
+        siteLogo.style.display = 'none';
+      }
+    }
+    
+    // Telefone no footer
+    if (document.getElementById('footerPhone')) {
+      document.getElementById('footerPhone').textContent = 
+        `${config.phone || "(34) 99970-4808"} | ${config.company_address || "Uberlândia - MG"}`;
+    }
+    
+    // ========== APLICAR CORES DO SITE ==========
+    if (config.main_color) {
+      document.documentElement.style.setProperty('--azul', config.main_color);
+      // Aplicar cor nos elementos
+      document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.style.backgroundColor = config.main_color;
+        btn.style.borderColor = config.main_color;
+      });
+      document.querySelectorAll('.text-primary').forEach(el => {
+        el.style.color = config.main_color;
+      });
+      document.querySelectorAll('.tag').forEach(tag => {
+        tag.style.backgroundColor = config.main_color;
+      });
+    }
+    
+    if (config.secondary_color) {
+      document.documentElement.style.setProperty('--azul-secundario', config.secondary_color);
+    }
+    
+    if (config.text_color) {
+      document.documentElement.style.setProperty('--cor-texto', config.text_color);
+      document.body.style.color = config.text_color;
+    }
+    
+    // Redes sociais
+    const whatsappLink = document.querySelector('.social-bar .whatsapp');
+    const instagramLink = document.querySelector('.social-bar .instagram');
+    const facebookLink = document.querySelector('.social-bar .facebook');
+    
+    if (whatsappLink && config.whatsapp_link) whatsappLink.href = config.whatsapp_link;
+    if (instagramLink && config.instagram_link) instagramLink.href = config.instagram_link;
+    if (facebookLink && config.facebook_link) facebookLink.href = config.facebook_link;
+    
+    // ========== CAROUSEL ATUALIZADO ==========
+    const carousel = document.getElementById('carouselImages');
+    if (carousel) {
+      console.log('🔄 Atualizando carousel com banners...');
+      
+      const banners = config.banner_images?.length ? config.banner_images : [BANNER_PADRAO];
+      
+      // Limpar carousel existente
+      carousel.innerHTML = '';
+      
+      // Adicionar cada banner
+      banners.forEach((url, i) => {
+        const isActive = i === 0;
+        carousel.innerHTML += `
+          <div class="carousel-item ${isActive ? 'active' : ''}">
+            <img src="${url}" class="d-block w-100" style="height:70vh;object-fit:cover;" 
+                 onerror="this.src='${BANNER_PADRAO}'" alt="Banner ${i + 1} - ${config.site_name || 'Lobianco Investimentos'}">
+            <div class="carousel-caption text-end pe-5">
+              <h1 class="display-3 fw-bold text-white">Viva o Alto Padrão</h1>
+              <p class="fs-1 text-white">Lançamentos em Uberlândia</p>
+              <span class="tag px-5 py-3 rounded-pill fw-bold fs-4">LANÇAMENTOS</span>
+            </div>
+          </div>`;
+      });
+      
+      // ATUALIZAR INDICADORES DINAMICAMENTE
+      const indicatorsContainer = document.querySelector('#heroCarousel .carousel-indicators');
+      if (indicatorsContainer && banners.length > 1) {
+        indicatorsContainer.innerHTML = '';
+        banners.forEach((_, i) => {
+          indicatorsContainer.innerHTML += `
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="${i}" 
+                    class="${i === 0 ? 'active' : ''}" aria-label="Slide ${i + 1}"></button>`;
+        });
+      }
+      
+      console.log(`✅ Carousel atualizado com ${banners.length} banner(s)`);
+      
+      // REINICIAR O CAROUSEL PARA GARANTIR FUNCIONAMENTO AUTOMÁTICO
+      setTimeout(() => {
+        const carouselElement = document.getElementById('heroCarousel');
+        if (carouselElement) {
+          try {
+            // Destruir carousel existente se houver
+            const existingCarousel = bootstrap.Carousel.getInstance(carouselElement);
+            if (existingCarousel) {
+              existingCarousel.dispose();
+            }
+            
+            // Criar novo carousel com configurações para início automático
+            const carouselInstance = new bootstrap.Carousel(carouselElement, {
+              interval: 4000,     // 4 segundos entre transições
+              wrap: true,         // Ciclo contínuo
+              touch: true,        // Swipe habilitado
+              keyboard: true      // Navegação por teclado
+            });
+            
+            // Iniciar automaticamente
+            carouselInstance.cycle();
+            
+            console.log('🎠 Carousel reinicializado e iniciado automaticamente!');
+          } catch (error) {
+            console.error('❌ Erro ao reinicializar carousel:', error);
+          }
+        }
+        resolve(); // Resolver a promise quando terminar
+      }, 100);
+    } else {
+      resolve(); // Resolver mesmo se não houver carousel
+    }
+  });
 }
 
 function aplicarConfigPadrao() {
-  aplicarConfiguracoes({
+  return aplicarConfiguracoes({
     site_name: "Lobianco Investimentos",
     phone: "(34) 99970-4808",
     main_color: "#0066CC",
     secondary_color: "#003366",
     text_color: "#333333"
   });
+}
+
+// FUNÇÃO PARA INICIALIZAR CAROUSEL FORÇADAMENTE
+function inicializarCarouselForcadamente() {
+  console.log('🎠 Inicializando carousel forçadamente...');
+  
+  const carouselElement = document.getElementById('heroCarousel');
+  if (carouselElement) {
+    try {
+      // Destruir carousel existente se houver
+      const existingCarousel = bootstrap.Carousel.getInstance(carouselElement);
+      if (existingCarousel) {
+        existingCarousel.dispose();
+      }
+      
+      // Criar novo carousel com configurações otimizadas
+      const carousel = new bootstrap.Carousel(carouselElement, {
+        interval: 4000,     // 4 segundos (mais rápido)
+        wrap: true,         // Ciclo contínuo
+        touch: true,        // Swipe habilitado
+        keyboard: true      // Navegação por teclado
+      });
+      
+      // Iniciar automaticamente
+      carousel.cycle();
+      
+      console.log('✅ Carousel inicializado com sucesso!');
+      
+      return carousel;
+    } catch (error) {
+      console.error('❌ Erro ao inicializar carousel:', error);
+    }
+  }
+  
+  return null;
 }
 
 // SALVAR CONFIGURAÇÃO COMPLETA - CORRIGIDO
@@ -1114,8 +1204,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Configurar modais primeiro
   configurarModais();
   
-  // Carregar dados
-  carregarConfig();
+  // Carregar dados e inicializar carousel
+  carregarConfig().then(() => {
+    console.log('✅ Configuração carregada, inicializando carousel...');
+    
+    // Garantir que o carousel foi inicializado
+    setTimeout(() => {
+      inicializarCarouselForcadamente();
+    }, 300);
+  });
+  
   carregarImoveis();
 
   // Teste da API
@@ -1126,7 +1224,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event listeners
   document.addEventListener('click', (e) => {
     if (e.target.closest('#openGestao')) {
-      // Abrir modal de login
       const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
       loginModal.show();
     }

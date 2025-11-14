@@ -74,17 +74,39 @@
   </nav>
 
   <!-- Hero Carousel -->
-  <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner" id="carouselImages">
-      <!-- Carregado via JavaScript -->
-    </div>
-    <button class="carousel-control-prev" data-bs-target="#heroCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" data-bs-target="#heroCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
+  <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+  <!-- Indicadores -->
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
   </div>
+  
+  <!-- Imagens do Carousel -->
+  <div class="carousel-inner" id="carouselImages">
+    <!-- Banner padrão que será substituído pelo JavaScript -->
+    <div class="carousel-item active">
+      <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=2070&q=80" 
+           class="d-block w-100" style="height:70vh;object-fit:cover;" 
+           alt="Banner Principal Lobianco Investimentos">
+      <div class="carousel-caption text-end pe-5">
+        <h1 class="display-3 fw-bold text-white">Viva o Alto Padrão</h1>
+        <p class="fs-1 text-white">Lançamentos em Uberlândia</p>
+        <span class="tag px-5 py-3 rounded-pill fw-bold fs-4">LANÇAMENTOS</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Controles -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Próximo</span>
+  </button>
+</div>
 
   <!-- Seções -->
   <section id="lancamentos" class="py-5">
