@@ -87,3 +87,18 @@ a:hover {
 .hidden {
     display: none;
 }
+.hero-carousel { height: 70vh; }
+.carousel-item img { height: 70vh; object-fit: cover; }
+.carousel-caption {
+  right: 8% !important;
+  left: auto !important;
+  bottom: 25%;
+  text-align: right;
+}
+.carousel-caption h1, .carousel-caption p {
+  background: transparent !important;
+}
+.tag {
+  background: var(--azul) !important;
+  display: inline-block;
+}
