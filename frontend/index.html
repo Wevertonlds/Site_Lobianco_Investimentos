@@ -6,6 +6,7 @@
   <title>Lobianco Investimentos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root { --azul: #0066CC; }
@@ -14,7 +15,7 @@
     .nav-link { font-weight: 600; color: #333 !important; }
     .nav-link:hover { color: var(--azul) !important; }
     .carousel-item img { height: 70vh; object-fit: cover; }
-    .carousel-caption { right: 10%; bottom: 20%; text-align: right; background: transparent; }
+    .carousel-caption { right: 10%; bottom: 20%; text-align: right; }
     .carousel-caption h1 { font-size: 4.5rem; font-weight: 800; text-shadow: 4px 4px 15px rgba(0,0,0,0.8); }
     .tag { background: var(--azul); padding: 15px 40px; border-radius: 50px; font-weight: bold; }
     .social-bar a { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; box-shadow: 0 8px 25px rgba(0,0,0,0.4); transition: 0.3s; }
@@ -22,26 +23,40 @@
     .social-bar .whatsapp { background: #25D366; }
     .social-bar .instagram { background: radial-gradient(circle at 30% 107%, #fdf497, #fd5949, #d6249f, #285AEB); }
     .social-bar .facebook { background: #1877F2; }
+    .property-card { transition: 0.3s; }
     .property-card:hover { transform: translateY(-15px); box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
     footer { background: #000; color: #ccc; padding: 70px 0 40px; }
-    #openGestao { color: #888; cursor: pointer; }
-    #openGestao:hover { color: white; }
+    #openGestao { color: #666; font-size: 0.9rem; text-decoration: none; margin-top: 20px; display: inline-flex; align-items: center; gap: 8px; }
+    #openGestao:hover { color: white; text-decoration: underline; }
+    #openGestao i { font-size: 1.1rem; }
+    
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+    
+    /* Correção para abas */
+    .tab-pane { min-height: 400px; }
   </style>
 </head>
 <body>
 
   <!-- Social Bar -->
   <div class="social-bar position-fixed start-0 top-50 translate-middle-y ps-3" style="z-index:9999">
-    <a href="#" id="linkWhatsapp" class="whatsapp mb-3"><i class="fab fa-whatsapp"></i></a>
-    <a href="#" id="linkInstagram" class="instagram mb-3"><i class="fab fa-instagram"></i></a>
-    <a href="#" id="linkFacebook" class="facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://wa.me/5534999704808" class="whatsapp mb-3" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="#" class="instagram mb-3">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="#" class="facebook">
+      <i class="fab fa-facebook-f"></i>
+    </a>
   </div>
 
-  <!-- Navbar com links -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg bg-white sticky-top">
     <div class="container">
       <a class="navbar-brand d-flex align-items-center" href="#">
-        <img id="siteLogo" src="" alt="Logo" height="60" class="me-3">
+        <img id="siteLogo" src="" alt="Logo" height="60" class="me-3" onerror="this.style.display='none'">
         <span id="siteName" class="fw-bold fs-3" style="color:var(--azul)">Lobianco</span>
       </a>
       <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -58,61 +73,260 @@
     </div>
   </nav>
 
-  <!-- Hero Carrossel -->
+  <!-- Hero Carousel -->
   <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner" id="carouselImages"></div>
-    <button class="carousel-control-prev" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
-    <button class="carousel-control-next" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+    <div class="carousel-inner" id="carouselImages">
+      <!-- Carregado via JavaScript -->
+    </div>
+    <button class="carousel-control-prev" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
   </div>
 
   <!-- Seções -->
-  <section id="lancamentos" class="py-5"><div class="container"><h2 class="text-center mb-5 fw-bold" style="color:var(--azul)">Lançamentos</h2><div class="row row-cols-1 row-cols-md-3 g-4" id="lancamentos-cards"></div></div></section>
-  <section id="plantas" class="py-5 bg-light"><div class="container"><h2 class="text-center mb-5 fw-bold" style="color:var(--azul)">Na Planta</h2><div class="row row-cols-1 row-cols-md-3 g-4" id="planta-cards"></div></div></section>
-  <section id="aluguel" class="py-5"><div class="container"><h2 class="text-center mb-5 fw-bold" style="color:var(--azul)">Para Alugar</h2><div class="row row-cols-1 row-cols-md-3 g-4" id="aluguel-cards"></div></div></section>
+  <section id="lancamentos" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5 fw-bold" style="color:var(--azul)">Lançamentos</h2>
+      <div class="row row-cols-1 row-cols-md-3 g-4" id="lancamentos-cards">
+        <!-- Carregado via JavaScript -->
+      </div>
+    </div>
+  </section>
 
+  <section id="plantas" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5 fw-bold" style="color:var(--azul)">Na Planta</h2>
+      <div class="row row-cols-1 row-cols-md-3 g-4" id="planta-cards">
+        <!-- Carregado via JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <section id="aluguel" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5 fw-bold" style="color:var(--azul)">Para Alugar</h2>
+      <div class="row row-cols-1 row-cols-md-3 g-4" id="aluguel-cards">
+        <!-- Carregado via JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer class="text-center">
     <div class="container">
       <p id="footerPhone" class="fs-4 mb-2">(34) 99970-4808 | Uberlândia - MG</p>
       <p>© 2025 Lobianco Investimentos</p>
-      <a id="openGestao"><i class="fas fa-cog"></i> Área de Gestão</a>
+      <a href="javascript:void(0)" id="openGestao">
+        <i class="bi bi-gear-fill"></i> Área de Gestão
+      </a>
     </div>
   </footer>
 
-  <!-- MODAL LOGIN + GESTÃO COMPLETA -->
-  <div class="modal fade" id="loginModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content p-5" style="border-radius:20px">
-        <h3 class="text-center mb-4" style="color:var(--azul)">Login - Área de Gestão</h3>
-        <input type="email" id="loginEmail" class="form-control form-control-lg mb-3" placeholder="Email">
-        <input type="password" id="loginPassword" class="form-control form-control-lg mb-4" placeholder="Senha">
-        <div id="loginError" class="text-danger text-center mb-3"></div>
-        <button id="btnLogin" class="btn btn-primary btn-lg w-100">ENTRAR</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="gestaoModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
+  <!-- MODAL DE LOGIN -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header"><h4>Área de Gestão</h4><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Área de Gestão</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
         <div class="modal-body">
-          <ul class="nav nav-tabs mb-4" id="gestaoTabs">
-            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tabConfig">Configuração</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabLancamentos">Lançamentos</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabPlanta">Na Planta</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabAluguel">Aluguel</a></li>
-          </ul>
-          <div class="tab-content">
-            <div class="tab-pane active" id="tabConfig"></div>
-            <div class="tab-pane" id="tabLancamentos"></div>
-            <div class="tab-pane" id="tabPlanta"></div>
-            <div class="tab-pane" id="tabAluguel"></div>
+          <div class="mb-3">
+            <label class="form-label">E-mail</label>
+            <input type="text" id="loginEmail" class="form-control" placeholder="qualquer coisa">
           </div>
+          <div class="mb-3">
+            <label class="form-label">Senha</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="qualquer coisa">
+          </div>
+          <div class="text-danger small" id="loginError"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success" id="btnLogin">ENTRAR</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- MODAL DE GESTÃO COM CONFIGURAÇÃO COMPLETA -->
+<div class="modal fade" id="gestaoModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h4 class="modal-title">Painel de Gestão - Configurações Completas</h4>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs mb-4">
+          <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#tabConfig">Configuração Geral</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#tabAparencia">Aparência</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#tabLancamentos">Lançamentos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#tabPlanta">Na Planta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#tabAluguel">Aluguel</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- ABA CONFIGURAÇÃO GERAL -->
+          <div class="tab-pane fade show active" id="tabConfig">
+            <h5 class="text-primary fw-bold mb-4">Configurações Gerais do Site</h5>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="border rounded p-4 bg-light mb-4">
+                  <h6 class="fw-bold mb-3">Informações da Empresa</h6>
+                  
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Nome do Site *</label>
+                    <input type="text" class="form-control" id="cfg_siteName" placeholder="Lobianco Investimentos">
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Telefone/WhatsApp *</label>
+                    <input type="text" class="form-control" id="cfg_phone" placeholder="(34) 99970-4808">
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">E-mail da Empresa</label>
+                    <input type="email" class="form-control" id="cfg_email" placeholder="contato@lobianco.com.br">
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Endereço</label>
+                    <input type="text" class="form-control" id="cfg_address" placeholder="Uberlândia - MG">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="border rounded p-4 bg-light mb-4">
+                  <h6 class="fw-bold mb-3">Redes Sociais</h6>
+                  
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Link do WhatsApp</label>
+                    <input type="url" class="form-control" id="cfg_whatsapp" placeholder="https://wa.me/5534999704808">
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Link do Instagram</label>
+                    <input type="url" class="form-control" id="cfg_instagram" placeholder="https://instagram.com/lobianco">
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Link do Facebook</label>
+                    <input type="url" class="form-control" id="cfg_facebook" placeholder="https://facebook.com/lobianco">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="border rounded p-4 bg-light">
+              <h6 class="fw-bold mb-3">Logo do Site</h6>
+              <div class="row align-items-end">
+                <div class="col-md-6">
+                  <input type="file" class="form-control mb-3" id="cfg_logo" accept="image/*">
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label fw-bold">Largura</label>
+                  <input type="text" class="form-control" id="cfg_logoWidth" placeholder="60px" value="60px">
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label fw-bold">Altura</label>
+                  <input type="text" class="form-control" id="cfg_logoHeight" placeholder="60px" value="60px">
+                </div>
+              </div>
+              <small class="text-muted">Use valores como: 60px, 80px, 100px, 5rem, etc.</small>
+            </div>
+
+            <div class="text-end mt-4">
+              <button class="btn btn-success btn-lg px-5" onclick="salvarConfiguracao()">
+                <i class="bi bi-check-circle"></i> SALVAR CONFIGURAÇÕES
+              </button>
+            </div>
+          </div>
+
+          <!-- ABA APARÊNCIA -->
+          <div class="tab-pane fade" id="tabAparencia">
+            <h5 class="text-primary fw-bold mb-4">Personalização de Cores</h5>
+            
+            <div class="border rounded p-4 bg-light mb-4">
+              <div class="row g-4">
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Cor Principal</label>
+                  <input type="color" class="form-control form-control-color" id="cfg_mainColor" value="#0066CC" title="Cor principal do site">
+                  <small class="text-muted">Usada em botões, títulos principais</small>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Cor Secundária</label>
+                  <input type="color" class="form-control form-control-color" id="cfg_secondaryColor" value="#003366" title="Cor secundária">
+                  <small class="text-muted">Usada em hovers, elementos secundários</small>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Cor do Texto</label>
+                  <input type="color" class="form-control form-control-color" id="cfg_textColor" value="#333333" title="Cor do texto">
+                  <small class="text-muted">Cor principal dos textos</small>
+                </div>
+              </div>
+              
+              <div class="mt-4 p-3 border rounded bg-white">
+                <h6 class="fw-bold">Pré-visualização das Cores:</h6>
+                <div class="d-flex gap-3 mt-2">
+                  <span class="badge" id="previewMainColor" style="background: #0066CC; color: white">Principal</span>
+                  <span class="badge" id="previewSecondaryColor" style="background: #003366; color: white">Secundária</span>
+                  <span class="badge" id="previewTextColor" style="background: #333333; color: white">Texto</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="border rounded p-4 bg-light">
+              <h6 class="fw-bold mb-3">Banners do Carrossel Principal</h6>
+              <input type="file" multiple class="form-control mb-3" id="cfg_banners" accept="image/*">
+              <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Selecione até 5 imagens para o carrossel hero. 
+                As imagens serão redimensionadas automaticamente.
+              </div>
+              <div id="previewBanners" class="row g-3 mt-3"></div>
+            </div>
+
+            <div class="text-end mt-4">
+              <button class="btn btn-success btn-lg px-5" onclick="salvarConfiguracao()">
+                <i class="bi bi-check-circle"></i> SALVAR CONFIGURAÇÕES
+              </button>
+            </div>
+          </div>
+
+          <!-- ABA LANÇAMENTOS -->
+          <div class="tab-pane fade" id="tabLancamentos">
+            <!-- Carregado via JavaScript -->
+          </div>
+
+          <!-- ABA NA PLANTA -->
+          <div class="tab-pane fade" id="tabPlanta">
+            <!-- Carregado via JavaScript -->
+          </div>
+
+          <!-- ABA ALUGUEL -->
+          <div class="tab-pane fade" id="tabAluguel">
+            <!-- Carregado via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
