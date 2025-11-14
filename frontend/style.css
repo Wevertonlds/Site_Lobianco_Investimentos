@@ -30,6 +30,9 @@ body {
 .navbar {
   box-shadow: var(--sombra);
   background: var(--branco) !important;
+  /* Garante que a navbar não force o layout além da largura da tela */
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .navbar-brand {
@@ -303,6 +306,13 @@ html {
     white-space: normal; 
     max-width: 60%; /* Reduz a largura máxima para dar espaço ao toggler */
   }
+  
+  /* Força o container da navbar a não ter padding lateral em telas muito pequenas */
+  .navbar .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   
   /* Ajuste para a Social Bar em telas menores que 992px */
   .social-bar {
