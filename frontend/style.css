@@ -17,10 +17,16 @@ body {
   color: var(--cor-texto);
   margin: 0;
   padding: 0;
-  scroll-behavior: smooth; 
 }
 
 /* ===== HEADER & NAVBAR ===== */
+/* Correção para evitar overflow horizontal em telas pequenas */
+.navbar-brand {
+  /* Garante que o conteúdo do brand não force o container a expandir */
+  max-width: 70%; 
+  /* Permite que o texto quebre para a próxima linha se for muito longo */
+  word-wrap: break-word; 
+}
 .navbar {
   box-shadow: var(--sombra);
   background: var(--branco) !important;
@@ -42,6 +48,10 @@ body {
 }
 
 /* ===== CARROSSEL HERO ===== */
+.hero-carousel { 
+  height: 70vh; 
+}
+
 .carousel-item img { 
   height: 70vh; 
   object-fit: cover;
@@ -52,7 +62,9 @@ body {
   left: auto;
   bottom: 20%;
   text-align: right;
+  /* Garante que o caption não se estenda além do container em telas grandes */
   max-width: 50%; 
+  margin-left: auto;
 }
 
 .carousel-caption h1 {
@@ -60,6 +72,8 @@ body {
   font-weight: 800;
   text-shadow: 4px 4px 15px rgba(0,0,0,0.8);
   margin-bottom: 1rem;
+  /* Adiciona quebra de linha para evitar overflow em telas grandes */
+  word-wrap: break-word; 
 }
 
 .carousel-caption p {
@@ -75,11 +89,9 @@ body {
   font-weight: bold;
   font-size: 1.5rem;
   display: inline-block;
-  color: var(--branco);
 }
 
-/* ===== SOCIAL BAR ===== */
-.social-bar {
+/* ===== SOCIAL BAR ===== */.social-bar {
   position: fixed;
   left: 0;
   top: 50%;
@@ -104,7 +116,7 @@ body {
 }
 
 .social-bar a:hover {
-  transform: scale(1.1); 
+  transform: scale(1.3);
   text-decoration: none;
 }
 
@@ -235,106 +247,112 @@ footer {
   box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
 }
 
-/* ===== RESPONSIVIDADE (Correções aplicadas) ===== */
+/* ===== SCROLL SUAVE ===== */
+html {
+  scroll-behavior: smooth;
+}
 
-/* Telas pequenas (sm - abaixo de 576px) */
-@media (max-width: 575.98px) {
-  
-  /* Carrossel */
-  .carousel-caption {
-    right: 5% !important;
-    bottom: 10%;
-    left: 5% !important; 
-    max-width: 90%;
-    text-align: center;
+/* ===== ANIMAÇÕES ===== */
+.fade-in {
+  animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== ESTILOS PARA PÁGINA DE LOGIN (se necessário) ===== */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cinza-claro);
+}
+
+.login-card {
+  background: var(--branco);
+  padding: 3rem;
+  border-radius: 1rem;
+  box-shadow: var(--sombra);
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem;
+}
+
+/* ===== ESTADOS ESPECIAIS ===== */
+.hidden {
+  display: none !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+.border-light {
+  border-color: #dee2e6 !important;
+}
+
+/* ===== RESPONSIVIDADE - MODIFICADA ===== */
+@media (max-width: 992px) { /* Tablet e Mobile */
+  /* Ajuste para a Navbar em telas menores que 992px (ponto de quebra do Bootstrap lg) */
+  .navbar-brand {
+    font-size: 1.5rem !important;
+    /* Força o nome do site a quebrar a linha se for muito longo */
+    white-space: normal; 
+    max-width: 60%; /* Reduz a largura máxima para dar espaço ao toggler */
   }
   
-  .carousel-caption h1 {
-    font-size: 1.8rem; 
-    margin-bottom: 0.5rem;
-  }
-  
-  .carousel-caption p {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .tag {
-    padding: 8px 20px;
-    font-size: 0.9rem;
-  }
-  
-  .carousel-item img {
-    height: 40vh;
-  }
-  
-  /* Barra Social - Movida para o rodapé */
+  /* Ajuste para a Social Bar em telas menores que 992px */
   .social-bar {
     top: auto;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    transform: none;
     width: 100%;
-    padding: 0.5rem 0;
-    background: rgba(255, 255, 255, 0.9); 
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    padding: 0.5rem 0;
+    background-color: rgba(255, 255, 255, 0.95); /* Fundo semi-transparente */
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+    border-top: 1px solid #eee;
   }
   
   .social-bar a {
     width: 45px;
     height: 45px;
-    font-size: 1.2rem;
     margin-bottom: 0;
+    font-size: 1.2rem;
+    box-shadow: none;
   }
   
-  /* Seções e Footer */
-  section {
-    padding: 3rem 0;
+  .social-bar a:hover {
+    transform: scale(1.1);
   }
   
-  footer {
-    padding: 40px 0 20px;
+  /* Ajuste para o Carrossel */
+  .hero-carousel { 
+    height: 60vh; 
   }
   
-  #footerPhone {
-    font-size: 1.2rem !important;
+  .carousel-item img { 
+    height: 60vh; 
   }
   
-  /* Modais de Gestão */
-  .modal-dialog.modal-xl {
-    max-width: 95vw;
-    margin: 0.5rem;
-  }
-  
-  .modal-body .nav-tabs {
-    flex-wrap: wrap;
-  }
-  
-  .modal-body .nav-item {
-    flex-grow: 1;
-    text-align: center;
-  }
-  
-  .modal-body .nav-link {
-    padding: 0.5rem;
-    font-size: 0.8rem;
-  }
-}
-
-/* Telas médias (md - 576px a 768px) */
-@media (min-width: 576px) and (max-width: 767.98px) {
   .carousel-caption {
     right: 5% !important;
-    bottom: 15%;
-    max-width: 60%;
+    left: 5% !important;
+    bottom: 10%;
+    text-align: center; /* Centraliza o texto no mobile */
   }
   
   .carousel-caption h1 {
     font-size: 2.5rem;
   }
+  
+
   
   .carousel-caption p {
     font-size: 1.2rem;
@@ -345,36 +363,46 @@ footer {
     font-size: 1rem;
   }
   
-  .carousel-item img {
-    height: 50vh;
-  }
-  
-  .social-bar {
-    padding-left: 0.5rem;
-  }
-  
-  .social-bar a {
-    width: 50px;
-    height: 50px;
-    font-size: 1.3rem;
-  }
-  
-  .modal-dialog.modal-xl {
-    max-width: 95vw;
+  section {
+    padding: 3rem 0;
   }
 }
 
-/* Telas grandes (lg - 768px a 992px) */
-@media (min-width: 768px) and (max-width: 991.98px) {
-  .carousel-caption h1 {
-    font-size: 3.5rem;
-  }
-  
-  .carousel-caption p {
-    font-size: 1.5rem;
-  }
-  
-  .modal-dialog.modal-xl {
-    max-width: 95vw;
-  }
-}
+@media (max-width: 576px) { /* Mobile */
+	  .hero-carousel { 
+	    height: 50vh; 
+	  }
+	  
+	  .carousel-item img {
+	    height: 50vh;
+	  }
+	  
+	  .carousel-caption h1 {
+	    font-size: 1.8rem;
+	  }
+	  
+	  .carousel-caption p {
+	    font-size: 1rem;
+	  }
+	  
+	  .tag {
+	    padding: 8px 20px;
+	    font-size: 0.9rem;
+	  }
+	  
+	  /* Ajuste para o rodapé */
+	  footer {
+	    padding: 50px 0 60px; /* Aumenta o padding inferior para não ser coberto pela social bar */
+	  }
+	  
+	  /* Ajuste para a Social Bar em telas menores que 576px */
+	  .social-bar {
+	    padding: 0.3rem 0;
+	  }
+	  
+	  .social-bar a {
+	    width: 40px;
+	    height: 40px;
+	    font-size: 1rem;
+	  }
+	}
